@@ -124,9 +124,9 @@ class UploadAdapter {
 	 */
 	_initRequest() {
 		const xhr = this.xhr = new XMLHttpRequest();
-		xhr.setRequestHeader("X-CSRF-TOKEN", this.csrfToken);
-
+		
 		xhr.open( 'POST', this.url, true );
+		xhr.setRequestHeader("X-CSRF-TOKEN", this.csrfToken);
 		xhr.responseType = 'json';
 	}
 
