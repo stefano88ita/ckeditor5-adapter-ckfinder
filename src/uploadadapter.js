@@ -41,13 +41,14 @@ export default class CKFinderUploadAdapter extends Plugin {
 	 */
 	init() {
 		const url = this.editor.config.get( 'ckfinder.uploadUrl' );
+		const token = this.editor.config.get('ckfinder.token');
 
-		if ( !url ) {
+		if ( !url || !token ) {
 			return;
 		}
 
 		// Register CKFinderAdapter
-		this.editor.plugins.get( FileRepository ).createUploadAdapter = loader => new UploadAdapter( loader, url, this.editor.t );
+		this.editor.plugins.get( FileRepository ).createUploadAdapter = loader => new UploadAdapter( loader, url, token, this.editor.t );
 	}
 }
 
@@ -65,7 +66,7 @@ class UploadAdapter {
 	 * @param {String} url
 	 * @param {module:utils/locale~Locale#t} t
 	 */
-	constructor( loader, url, t ) {
+	constructor( loader, url, csrfToken, t ) {
 		/**
 		 * FileLoader instance to use during the upload.
 		 *
@@ -86,6 +87,8 @@ class UploadAdapter {
 		 * @member {module:utils/locale~Locale#t} #t
 		 */
 		this.t = t;
+
+		this.csrfToken = csrfToken;
 	}
 
 	/**
@@ -121,6 +124,7 @@ class UploadAdapter {
 	 */
 	_initRequest() {
 		const xhr = this.xhr = new XMLHttpRequest();
+		xhr.setRequestHeader("X-CSRF-TOKEN", this.csrfToken);
 
 		xhr.open( 'POST', this.url, true );
 		xhr.responseType = 'json';
