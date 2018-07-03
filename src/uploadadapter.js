@@ -127,6 +127,7 @@ class UploadAdapter {
 		
 		xhr.open( 'POST', this.url, true );
 		xhr.setRequestHeader("X-CSRF-TOKEN", this.csrfToken);
+		xhr.setRequestHeader("X-Requested-With", 'XMLHttpRequest');
 		xhr.responseType = 'json';
 	}
 
